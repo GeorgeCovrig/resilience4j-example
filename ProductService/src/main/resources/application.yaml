@@ -1,0 +1,43 @@
+spring:
+  cloud:
+    consul:
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
+        prefer-ip-address: true
+      host: localhost
+      port: 8500
+  application:
+    name: product-service-tutorial
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8180/realms/cool-programmer-tutorial/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8180/realms/cool-programmer-tutorial
+logging:
+  level:
+    ROOT: info
+server:
+  port: 8600
+resilience4j:
+  bulkhead:
+    instances:
+      bulkhead:
+        maxConcurrentCalls: 10
+  timelimiter:
+    instances:
+      time-limiter:
+        timeoutDuration: 2s
+
+  ratelimiter:
+    instances:
+      rate-limiter:
+        limitRefreshPeriod: 60s
+        limitForPeriod: 2
+
+  retry:
+    instances:
+      retry-test:
+        maxAttempts: 3
+        waitDuration: 1s
+        enableExponentialBackoff: true
